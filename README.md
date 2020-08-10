@@ -8,6 +8,7 @@ An open source 2D game engine made in c++ for windows.
 - Trigger boxes.
 - Physics layering.
 - Physics culling.
+- Physics casting.
 - Event handling.
 - Primitive shape rendering.
 - Render layering.
@@ -23,7 +24,6 @@ An open source 2D game engine made in c++ for windows.
 # Roadmap
 
 - WHSK Scripting.
-- Physics casting.
 - Documentation.
 - Level editor.
 
