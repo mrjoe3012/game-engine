@@ -12,3 +12,4 @@
 #include "CollisionHandler.h"
 #include "CircleCollider.h"
 #include "LineCollider.h"
+#include "QueryResult.h"

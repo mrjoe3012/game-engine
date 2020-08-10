@@ -6,6 +6,7 @@
 #include "CircleCollider.h"
 #include <math.h>
 #include "CollisionInfoInternal.h"
+#include <algorithm>
 
 using namespace Engine::Maths;
 
@@ -17,6 +18,7 @@ using Engine::Physics::CollisionHandler;
 using Engine::Physics::Collider;
 using Engine::Physics::CollisionInfoInternal;
 using Engine::Physics::CollisionInfo;
+using Engine::Physics::QueryResult;
 
 vector<PhysicsObject*> PhysicsHandler::objects = vector<PhysicsObject*>();
 
@@ -453,4 +455,182 @@ void PhysicsHandler::Initialize()
 		}
 	}
 
+}
+
+vector<QueryResult> PhysicsHandler::LineCast(Vector2D origin, Vector2D direction, float maxDistance, vector<bool> layers, int maxHits)
+{
+	vector<QueryResult> results = vector<QueryResult>();
+	direction = Vector2D::Normalize(direction);
+	for (PhysicsObject* obj : GetPhysicsObjects())
+	{
+		Collider* c = obj->GetCollider();
+
+		if (obj->enabled && c && layers[obj->GetCollisionLayer()])
+		{
+			Line l = Line(origin, direction*(obj->GetPosition() - origin).Magnitude()*2.0f);
+
+			RectCollider* rCol = dynamic_cast<RectCollider*>(c);
+			CircleCollider* cCol = dynamic_cast<CircleCollider*>(c);
+
+			if (rCol)
+			{
+				Rect r = rCol->rect;
+
+				auto info = CheckIntersection(r, l);
+
+				if (info.pointCount > 0)
+				{
+					Vector2D closestPoint = info.pointsOfIntersection[0];
+
+					for (size_t i = 1; i < info.pointCount; i++)
+					{
+						if ((closestPoint - origin).SquareMagnitude() > (info.pointsOfIntersection[i] - origin).SquareMagnitude())
+							closestPoint = info.pointsOfIntersection[i];
+					}
+
+					if((closestPoint-origin).SquareMagnitude() <= maxDistance)
+						results.push_back(QueryResult(obj));
+				}
+			}
+			else if (cCol)
+			{
+				Circle c = cCol->circle;
+
+				auto info = CheckIntersection(l, c);
+
+				if (info.pointCount > 0)
+				{
+					Vector2D closestPoint = info.pointsOfIntersection[0];
+
+					for (size_t i = 1; i < info.pointCount; i++)
+					{
+						if ((closestPoint - origin).SquareMagnitude() > (info.pointsOfIntersection[i] - origin).SquareMagnitude())
+							closestPoint = info.pointsOfIntersection[i];
+					}
+
+					if ((closestPoint - origin).SquareMagnitude() <= maxDistance)
+						results.push_back(QueryResult(obj));
+				}
+			}
+
+			Vector2D dir = Vector2D::Normalize(c->GetCenter() - origin);
+
+			if (dir == direction && (c->GetCenter()-origin).SquareMagnitude() <= powf(maxDistance,2.0f))
+			{
+				results.push_back(QueryResult(obj));
+			}
+		}
+
+	}
+
+	std::sort(results.begin(), results.end(), [origin](QueryResult a, QueryResult b) { return (a.hit->GetPosition() - origin).SquareMagnitude() < (b.hit->GetPosition() - origin).SquareMagnitude();});
+	if(maxHits > 0)
+		if (results.size() > maxHits)
+		{
+			results.erase(results.begin() + maxHits, results.end());
+		}
+	return results;
+}
+
+vector<QueryResult> PhysicsHandler::BoxCast(Rect rect,  vector<bool> layers, int maxHits)
+{
+	vector<QueryResult> results = vector<QueryResult>();
+
+	for (PhysicsObject* obj : GetPhysicsObjects())
+	{
+
+		Collider* col = obj->GetCollider();
+
+		if (obj->enabled && col && layers[obj->GetCollisionLayer()])
+		{
+			RectCollider* rCol = dynamic_cast<RectCollider*>(col);
+			CircleCollider* cCol = dynamic_cast<CircleCollider*>(col);
+
+			if (rCol)
+			{
+				Rect r = rCol->rect;
+
+				auto info = CheckIntersection(r, rect);
+
+				if (info.pointCount > 0 || info.identical || r.Contains(rect.center) || rect.Contains(r.center))
+					results.push_back(QueryResult(obj));
+
+			}
+			else if (cCol)
+			{
+				Circle c = cCol->circle;
+
+				auto info = CheckIntersection(rect,c);
+
+				if (info.pointCount > 0 || info.identical || c.Contains(rect.center) || rect.Contains(c.center))
+					results.push_back(QueryResult(obj));
+			}
+		}
+
+
+		std::sort(results.begin(), results.end(), [rect](QueryResult a, QueryResult b) { return (a.hit->GetPosition() - rect.center).SquareMagnitude() < (b.hit->GetPosition() - rect.center).SquareMagnitude();});
+		if (maxHits > 0)
+			if (results.size() > maxHits)
+			{
+				results.erase(results.begin() + maxHits, results.end());
+			}
+		return results;
+	}
+
+}
+
+vector<QueryResult> PhysicsHandler::BoxCast(Vector2D origin, float width, float height,  vector<bool> layers, int maxHits)
+{
+	return BoxCast(Rect(origin, width, height), layers, maxHits);
+}
+
+vector<QueryResult> PhysicsHandler::CircleCast(Circle circle,  vector<bool> layers, int maxHits)
+{
+	vector<QueryResult> results = vector<QueryResult>();
+
+	for (PhysicsObject* obj : GetPhysicsObjects())
+	{
+
+		Collider* col = obj->GetCollider();
+
+		if (obj->enabled && col && layers[obj->GetCollisionLayer()])
+		{
+			RectCollider* rCol = dynamic_cast<RectCollider*>(col);
+			CircleCollider* cCol = dynamic_cast<CircleCollider*>(col);
+
+			if (rCol)
+			{
+				Rect r = rCol->rect;
+
+				auto info = CheckIntersection(r, circle);
+
+				if (info.pointCount > 0 || info.identical || r.Contains(circle.center) || circle.Contains(r.center))
+					results.push_back(QueryResult(obj));
+
+			}
+			else if (cCol)
+			{
+				Circle c = cCol->circle;
+
+				auto info = CheckIntersection(circle, c);
+
+				if (info.pointCount > 0 || info.identical || c.Contains(circle.center) || circle.Contains(c.center))
+					results.push_back(QueryResult(obj));
+			}
+		}
+
+
+		std::sort(results.begin(), results.end(), [circle](QueryResult a, QueryResult b) { return (a.hit->GetPosition() - circle.center).SquareMagnitude() < (b.hit->GetPosition() - circle.center).SquareMagnitude();});
+		if (maxHits > 0)
+			if (results.size() > maxHits)
+			{
+				results.erase(results.begin() + maxHits, results.end());
+			}
+		return results;
+	}
+}
+
+vector<QueryResult> PhysicsHandler::CircleCast(Vector2D origin, float radius,  vector<bool> layers, int maxHits)
+{
+	return CircleCast(Circle(origin, radius), layers, maxHits);
 }

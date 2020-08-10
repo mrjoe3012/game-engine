@@ -1,6 +1,6 @@
 #pragma once
 // Include the initial level's header here
-//#include "levelheader.h"#
+//#include "levelheader.h"
 
 #define INITIAL_LEVEL Level
 // Define the name of the type of the initial level.

@@ -27,6 +27,7 @@
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PhysicsHandler.h" />
     <ClInclude Include="PhysicsObject.h" />
+    <ClInclude Include="QueryResult.h" />
     <ClInclude Include="RectCollider.h" />
   </ItemGroup>
   <ItemGroup>
@@ -39,6 +40,7 @@
     <ClCompile Include="LineCollider.cpp" />
     <ClCompile Include="PhysicsHandler.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
+    <ClCompile Include="QueryResult.cpp" />
     <ClCompile Include="RectCollider.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

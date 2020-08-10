@@ -3,6 +3,7 @@
 #include "PhysicsObject.h"
 #include "CollisionInfo.h"
 #include <vector>
+#include "QueryResult.h"
 
 using std::vector;
 
@@ -53,6 +54,12 @@ namespace Engine
 
 			static int layerCount;
 			static Engine::Maths::Matrix<bool> layerMatrix;
+
+			static vector<QueryResult> LineCast(Vector2D origin, Vector2D direction, float maxDistance = INFINITY, vector<bool> layers = vector<bool>(layerCount, true), int maxHits = -1);
+			static vector<QueryResult> BoxCast(Vector2D origin, float width, float height,  vector<bool> layers = vector<bool>(layerCount, true), int maxHits = -1);
+			static vector<QueryResult> BoxCast(Rect rect,  vector<bool> layers = vector<bool>(layerCount, true), int maxHits = -1);
+			static vector<QueryResult> CircleCast(Vector2D origin, float radius,  vector<bool> layers = vector<bool>(layerCount, true), int maxHits = -1);
+			static vector<QueryResult> CircleCast(Circle circle, vector<bool> layers = vector<bool>(layerCount, true), int maxHits = -1);
 		};
 
 	}

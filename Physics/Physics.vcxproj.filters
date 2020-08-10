@@ -42,6 +42,9 @@
     <ClInclude Include="LineCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="QueryResult.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PhysicsObject.cpp">
@@ -72,6 +75,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LineCollider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryResult.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
