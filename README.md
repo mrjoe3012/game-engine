@@ -19,7 +19,7 @@ An open source 2D game engine made in c++ for windows.
 - Input handling.
 - Text rendering
 - Text scaling.
-- Multiple level support.
+- Level switching and loading.
 
 # Roadmap
 
