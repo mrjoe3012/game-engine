@@ -26,7 +26,10 @@ An open source 2D game engine made in c++ for windows.
 - WHSK Scripting.
 - Documentation.
 - Level editor.
+- Error message boxes and codes.
+- XAudio init fail error throw.
 
 # Known bugs
 
 - Circle on circle collision detecting in rare cases.
+- Some systems fail to initialize XAudio.
