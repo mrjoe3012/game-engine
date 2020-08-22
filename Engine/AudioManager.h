@@ -24,7 +24,7 @@ namespace Engine
 
 		public:
 			// Initialize the engine.
-			static HRESULT Init();
+			static void Init();
 
 			// Boilerplate chunk reading.
 			static HRESULT FindChunk(HANDLE hFile, DWORD fourcc, DWORD & dwChunkSize, DWORD & dwChunkDataPosition);

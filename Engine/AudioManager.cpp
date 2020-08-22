@@ -1,21 +1,21 @@
 #define USE_AUDIOMANAGER_DEFINES
 #include "AudioManager.h"
+#include <stdexcept>
 
 using Engine::Internal::AudioManager;
 
 IXAudio2* AudioManager::pXAudio2 = NULL;
 IXAudio2MasteringVoice* AudioManager::pMasterVoice = NULL;
 
-HRESULT AudioManager::Init()
+void AudioManager::Init()
 {
 	HRESULT hr;
 	if (FAILED(hr = XAudio2Create(&pXAudio2, 0, XAUDIO2_USE_DEFAULT_PROCESSOR)))
-		return hr;
+		throw std::runtime_error("Unable to initialize the XAudio2 engine.");
 
 	if (FAILED(hr = pXAudio2->CreateMasteringVoice(&pMasterVoice)))
-		return hr;
+		throw std::runtime_error("Unable to create an XAudio2 mastering voice.");
 
-	return hr;
 }
 
 HRESULT AudioManager::FindChunk(HANDLE hFile, DWORD fourcc, DWORD & dwChunkSize, DWORD & dwChunkDataPosition)
