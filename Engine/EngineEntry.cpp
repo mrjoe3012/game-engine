@@ -71,8 +71,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 				if (EngineManager::hasQuit)
 				{
-					Level::QuitCall(EngineManager::exitCode);
-					return EngineManager::exitCode;
+					break;
 				}
 				// Store a list with pointers to the instantiated renderer components
 				std::vector<Renderer*> renderers;
