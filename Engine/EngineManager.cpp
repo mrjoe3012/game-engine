@@ -81,12 +81,12 @@ LRESULT CALLBACK EngineManager::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, L
 void EngineManager::Release()
 {
 
-	auto actorList = Actor::GetActorList();
+	/*auto actorList = Actor::GetActorList();
 
 	for (size_t i = 0; i < actorList.size(); i++)
 	{
 		delete (actorList[i]);
-	}
+	}*/
 
 	delete graphics;
 	delete window;
