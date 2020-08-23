@@ -10,7 +10,7 @@ IXAudio2MasteringVoice* AudioManager::pMasterVoice = NULL;
 void AudioManager::Init()
 {
 	HRESULT hr;
-	if (FAILED(hr = XAudio2Create(&pXAudio2, 0, XAUDIO2_USE_DEFAULT_PROCESSOR)))
+	if (FAILED(hr = XAudio2Create(&pXAudio2, 0, XAUDIO2_ANY_PROCESSOR)))
 		throw std::runtime_error("Unable to initialize the XAudio2 engine.");
 
 	if (FAILED(hr = pXAudio2->CreateMasteringVoice(&pMasterVoice)))
