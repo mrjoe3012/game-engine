@@ -126,5 +126,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	}
 
 	Level::QuitCall(EngineManager::exitCode);
+	EngineManager::Release();
 	return EngineManager::exitCode;
 }
