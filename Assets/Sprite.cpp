@@ -67,7 +67,7 @@ void Sprite::ReadImage()
 	res = factory->CreateDecoderFromFilename(path.c_str(), NULL, GENERIC_READ, WICDecodeMetadataCacheOnLoad, &decoder);
 
 	if (res != S_OK)
-		throw std::runtime_error("Unable to create an IWICBitmapDecoder! Perhaps the path is incorrect.");
+		throw std::runtime_error("Unable to create an IWICBitmapDecoder! Perhaps the path is incorrect or an asset file is missing.");
 	// Use the frame with the converter to get an ID2D1Bitmap
 	IWICBitmapFrameDecode* frame = NULL;
 	res = decoder->GetFrame(0, &frame);

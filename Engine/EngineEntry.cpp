@@ -20,26 +20,25 @@ using namespace Engine::Internal;
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
-	// Initialize the internal engine manager.
-	EngineManager::Init(hInstance, nCmdShow);
-	EngineManager::backgroundColour = DEFAULT_BACKGROUND_COLOUR;
-	// Initialize the audio engine (xaudio)
-	AudioManager::Init();
-
-	Engine::Physics::PhysicsHandler::layerCount = PHYSICS_LAYER_COUNT;
-
-	// Initialize physics
-	Engine::Physics::PhysicsHandler::Initialize();
-
-	// Load the initial level defined in the engine config header.
-	Level::LoadLevel<INITIAL_LEVEL>();
-
-	// Store a window message.
-	MSG msg;
-	msg.message = WM_NULL;
-
 	try
 	{
+		// Initialize the internal engine manager.
+		EngineManager::Init(hInstance, nCmdShow);
+		EngineManager::backgroundColour = DEFAULT_BACKGROUND_COLOUR;
+		// Initialize the audio engine (xaudio)
+		AudioManager::Init();
+
+		Engine::Physics::PhysicsHandler::layerCount = PHYSICS_LAYER_COUNT;
+
+		// Initialize physics
+		Engine::Physics::PhysicsHandler::Initialize();
+
+		// Load the initial level defined in the engine config header.
+		Level::LoadLevel<INITIAL_LEVEL>();
+
+		// Store a window message.
+		MSG msg;
+		msg.message = WM_NULL;
 
 		while (msg.message != WM_QUIT)
 		{
@@ -118,10 +117,17 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	catch (std::exception e)
 	{
 		MessageBox(NULL, e.what(), "Unhandled Exception", MB_OK);
+		return -1;
 	}
 	catch (std::runtime_error e)
 	{
 		MessageBox(NULL, e.what(), "Unhandled runtime error", MB_OK);
+		return -1;
+	}
+	catch (...)
+	{
+		MessageBox(NULL, "Unhandled exception.", "Unhandled Exception", MB_OK);
+		return -1;
 	}
 
 	Level::QuitCall(EngineManager::exitCode);
